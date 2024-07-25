@@ -139,7 +139,9 @@ create table job_history(
 
 select * from employees;
 
-
+/**
+  * 1~9 과제
+ */
 
 -- 1. 모든 사원의 이름, 부서번호, 부서 이름을 조회하세요
 select concat(e.first_name ,  ' ', e.last_name), d.department_id , d.department_name
@@ -167,6 +169,8 @@ select concat(e.first_name , ' ' , e.last_name) '사원이름',  d.department_na
 from employees e join departments d on e.department_id = d.department_id
 where concat(e.first_name , e.last_name) like '%a%';
 
+
+
 -- 5. 'Toronto'에서 근무하는 모든 사원의 이름, 업무, 부서 번호 와 부서명을 조회하세요
 select concat(e.first_name , ' ', e.last_name) '사원이름' , j.job_id '업무번호', d.department_id '부서번호', d.department_name '부서명'
 from employees e
@@ -178,22 +182,20 @@ where l.city = 'Toronto';
 
 
 -- 6. 사원의 이름 과 사원번호를 관리자의 이름과 관리자 아이디와 함께 표시하고 각각의 컬럼명을 Employee, Emp#, Manger, Mgr#으로 지정하세요
-select concat(e.first_name , ' ',  e.last_name) , e.employee_id , concat(e.first_name , ' ',  e.last_name) ,  e.manager_id
-from employees e join departments d on e.manager_id = d.manager_id;
-
+select concat(emp.first_name, ' ', emp.last_name) 'Employee', emp.employee_id 'Emp#', concat(mng.first_name, ' ', mng.last_name) 'Manager', mng.employee_id 'Mgr#'
+from employees emp, employees mng
+where emp.manager_id = mng.employee_id;
 
 -- 7. 사장인'King'을 포함하여 관리자가 없는 모든 사원을 조회하세요 (사원번호를 기준으로 정렬하세요)
-select *
-from employees e
-where e.last_name != 'King';
-
-
+select emp.*
+from employees emp
+where emp.manager_id is null
+order by emp.employee_id;
 
 -- 8. 지정한 사원의 이름, 부서 번호 와 지정한 사원과 동일한 부서에서 근무하는 모든 사원을 조회하세요
-select concat(e.first_name , ' ', e.last_name) , d.department_id
-from employees e join departments d on e.department_id = d.department_id
-
-
+select concat(emp1.first_name, ' ', emp1.last_name) '지정한 사원의 이름', emp1.department_id '지정한 사원의 부서 번호', emp2.*
+from employees emp1, employees emp2, departments
+where emp1.employee_id = '101' and emp1.department_id = emp2.department_id;
 
 -- 9. JOB_GRADRES 테이블을 생성하고 모든 사원의 이름, 업무,부서이름, 급여 , 급여등급을 조회하세요
 CREATE TABLE job_grades (
@@ -201,7 +203,11 @@ CREATE TABLE job_grades (
     lowest_sal 	INT NOT NULL,
     highest_sal	INT NOT NULL
 );
-
+select *
+from job_grades;
+select concat(first_name, ' ', last_name) 이름, job_title 업무, department_name 부서이름, salary 급여, grade_level 급여등급
+from departments, jobs, employees left outer join job_grades on salary BETWEEN lowest_sal and highest_sal
+where employees.department_id = departments.department_id and jobs.job_id = employees.job_id;
 /**
   * SQL Practice 1
  */
@@ -340,7 +346,5 @@ from employees e
 -- 3 : 셀프 조인 문제
 select concat(e.first_name , ' ', e.last_name) , 'report to' , ifnull(UPPER(concat(e1.first_name , ' ', e1.last_name)) , concat(e.first_name , ' ', e.last_name))
 from employees e join employees e1 on e.employee_id = e1.manager_id;
-
-
 
 
