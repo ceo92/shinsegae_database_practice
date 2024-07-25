@@ -1,0 +1,37 @@
+use bookmarket;
+
+
+select * from orders;
+
+select * from book;
+select * from orders;
+
+
+describe book;
+describe orders;
+describe customer;
+
+-- 고객의 이름과 고객이 주문한 도서의 이름 , 고객이 주문한 주문 id 조회
+select c.name , b.bookname , o.orderid
+from customer c join book b join orders o
+on o.bookid = b.bookid and o.cusid = c.cusid;
+
+
+select c.name , b.bookname , o.orderid
+from customer c , book b , orders o
+where o.cusid = c.cusid and o.bookid = b.bookid;
+-- 그냥 두면 카디션 프로덕트로 중복 제거 안 되고 하나씩 조회되지만, 이런 식으로
+
+-- 1-5
+select count(*) from book b join orders o join customer c
+on o.cusid = c.cusid and o.bookid = b.bookid where c.name = '박지성';
+
+-- 1-6
+select b.bookname , b.price from book b join orders o join customer c
+on o.cusid = c.cusid and o.bookid = b.bookid where c.name = '박지성';
+
+
+
+-- 1-7
+select b.bookname from book b join orders o join customer c
+on o.cusid = c.cusid and o.bookid = b.bookid where c.name <> '박지성';
