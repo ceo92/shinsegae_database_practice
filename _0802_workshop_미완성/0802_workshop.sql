@@ -1,0 +1,157 @@
+
+
+
+
+
+#######################################################
+# 신세계INC -- 자바백엔드개발자과정 데이터베이스 과목
+# 강사:서유미
+# 실습 DATABASE명: SSG닷컴
+# 작성일:2024-07-10
+#######################################################
+
+
+DROP DATABASE IF EXISTS SSG닷컴;
+
+CREATE DATABASE SSG닷컴 DEFAULT CHARSET  utf8mb4 COLLATE  utf8mb4_general_ci;
+
+USE SSG닷컴;
+
+CREATE TABLE 부서(
+  부서번호 CHAR(2) PRIMARY KEY,
+  부서명 VARCHAR(20)
+ ) DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE 사원(
+  사원번호 CHAR(3) PRIMARY KEY,
+  이름 VARCHAR(20),
+  영문이름 VARCHAR(20),
+  직위 VARCHAR(10),
+  성별 CHAR(2),
+  생일 DATE,
+  입사일 DATE,
+  주소 VARCHAR(50),
+  도시 VARCHAR(20),
+  지역 VARCHAR(20),
+  집전화 VARCHAR(20),
+  상사번호 CHAR(3),
+  부서번호 CHAR(2)
+  ) DEFAULT CHARSET=utf8mb4;
+
+
+
+
+CREATE TABLE 고객(
+   고객번호 CHAR(5) PRIMARY KEY,
+   고객회사명 VARCHAR(30),
+   담당자명 VARCHAR(20),
+   담당자직위 VARCHAR(20),
+   주소 VARCHAR(50),
+   도시 VARCHAR(20),
+   지역 VARCHAR(20),
+   전화번호 VARCHAR(20),
+   마일리지 INT
+  ) DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE 제품(
+  제품번호 INT PRIMARY KEY,
+  제품명 VARCHAR(50),
+  포장단위 VARCHAR(30),
+  단가 INT,
+  재고 INT
+  ) DEFAULT CHARSET=utf8mb4;
+
+
+
+
+CREATE TABLE 주문(
+  주문번호 CHAR(5) PRIMARY KEY,
+  고객번호 CHAR(5),
+  사원번호 CHAR(3),
+  주문일 DATE,
+  요청일 DATE,
+  발송일 DATE
+  ) DEFAULT CHARSET=utf8mb4;
+
+
+
+
+CREATE TABLE 주문세부(
+  주문번호 CHAR(5),
+  제품번호 INT,
+  단가 INT,
+  주문수량 INT,
+  할인율 FLOAT,
+  PRIMARY KEY(주문번호, 제품번호)
+ ) DEFAULT CHARSET=utf8mb4;
+
+
+
+
+CREATE TABLE 마일리지등급(
+  등급명 CHAR(1) PRIMARY KEY,
+  하한마일리지 INT,
+  상한마일리지 INT
+  ) DEFAULT CHARSET=utf8mb4;
+
+
+-- 1
+select * from 고객;
+
+
+-- 2
+select 고객번호, 담당자명 , 고객회사명 , 마일리지 '포인트' , 마일리지*1.1 '10%인상된 마일리지' from 고객;
+
+-- 3
+select 고객번호, 담당자명 , 마일리지 from 고객 where 마일리지 >= 100000;
+
+
+-- 4
+select 고객번호 , 담당자명 , 도시 , 마일리지 from 고객 where 도시 = '서울특별시' order by 마일리지 desc;
+
+
+-- 5
+select * from 고객 limit 3;
+
+
+-- 6
+select * from 고객 order by 마일리지 desc limit 3;
+
+
+-- 7
+select distinct 도시 from 고객;
+
+-- 8
+select 23+5 '더하기' , 23-5 '빼기' , 23*5 '곱하기'  , 23/5 '실수나누기'  , 23 div 5 '정수나누기' , 23 %5 '나머지1' , 23%5 '나머지2' from dual;
+
+
+
+-- 9
+select 23 >= 5 '>=', 23 <= 5 '<=' , 23 > 5  '>' , 23 < 5 '<' , 23 = 5 '=' , 23 != 5 '!=' , 23 <> 5 '<>' from dual;
+
+-- 10
+select * from 고객 where 담당자직위 != '대표 이사';
+
+-- 13
+select * from 고객 where 지역 is null;
+
+
+-- 14
+select 고객번호 , 담당자명 , 담당자직위 from 고객 where 담당자직위 in('영업 과장' , '마케팅 과장');
+
+-- 15
+select 담당자명 , 마일리지 from 고객 where 마일리지 between 100000 and 200000;
+
+-- 16
+select * from 고객 where 도시 = '%광역시' and (고객번호 = '_C*' OR 고객번호 = '__C*');
+
+
+-- 17
+select distinct 지역 , 도시 from 고객 order by 지역  , 도시;
+
+
+
